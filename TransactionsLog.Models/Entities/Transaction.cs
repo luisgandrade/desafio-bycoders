@@ -19,22 +19,5 @@ namespace TransactionsLog.Models.Entities
         public TransactionType TransactionType { get; set; }
 
         public decimal Value => TransactionType.TransactionFlow.Signal() * AbsoluteValue;
-
-        public Transaction()
-        {
-            
-        }
-
-        public Transaction(int id, DateTime timestamp, decimal absoluteValue, string cpf, string card, string storeOwnerName, string storeName, TransactionType transactionType)
-        {
-            Id = id;
-            Timestamp = timestamp;
-            AbsoluteValue = absoluteValue;
-            Cpf = cpf;
-            Card = card;
-            StoreOwnerName = storeOwnerName;
-            StoreName = storeName;
-            TransactionType = transactionType;
-        }
     }
 }
