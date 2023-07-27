@@ -25,8 +25,6 @@ namespace TransactionsLog.DataLayer.EF
                 .HasConversion(vFromApp => (int)vFromApp, vFromDb => (TransactionFlow)vFromDb);
 
             modelBuilder.Entity<Transaction>()
-                .Ignore(t => t.Value);
-            modelBuilder.Entity<Transaction>()
                 .HasOne(t => t.TransactionType).WithMany().IsRequired();
         }
     }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Npgsql.Internal.TypeHandlers.DateTimeHandlers;
 using TransactionsLog.DataLayer.EF;
 using TransactionsLog.Models.Entities;
 using TransactionsLog.Models.Enums;
@@ -7,6 +8,9 @@ namespace TransactionsLog.StartupExtensions
 {
     public static class StartupDbSetupExtensions
     {
+
+        private const int DB_CONNECTION_RETRY_ATTEMPTS = 6;
+        private const int INTERVAL_BETWEEN_RETRIES_IN_SECONDS = 10;
 
         private static IList<TransactionType> CreateBaseTransactionTypes() => new[]
         {
@@ -25,14 +29,23 @@ namespace TransactionsLog.StartupExtensions
         {
             using(var scope = applicationBuilder.ApplicationServices.CreateScope())
             {
-                var dbContext = scope.ServiceProvider.GetService<TransactionsLogContext>() ?? throw new InvalidOperationException("DbContext not configured");
+                var dbContext = scope.ServiceProvider.GetService<TransactionsLogContext>() ?? throw new InvalidOperationException("DbContext não configurado");
+                var retryAttemps = 0;
+                while(retryAttemps < DB_CONNECTION_RETRY_ATTEMPTS)
+                {
+                    if (dbContext.Database.CanConnect())
+                        break;
+                    retryAttemps++;
+                    Thread.Sleep(INTERVAL_BETWEEN_RETRIES_IN_SECONDS * 1000);
+                }
 
-                if (dbContext.Database.EnsureCreated())
+                dbContext.Database.Migrate();
+                if (!dbContext.TransactionTypes.Any())
                 {
                     var transactionTypes = CreateBaseTransactionTypes();
                     dbContext.TransactionTypes.AddRange(transactionTypes);
                     dbContext.SaveChanges();
-                }                
+                }
             }
             
             return applicationBuilder;

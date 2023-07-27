@@ -23,6 +23,7 @@ builder.Services.AddScoped<IBaseRepository<Transaction>, EFBaseRepository<Transa
 builder.Services.AddScoped<IBaseRepository<TransactionType>, EFBaseRepository<TransactionType>>();
 builder.Services.AddScoped<IUnitOfWork, EFUnitOfWork>();
 
+builder.Services.AddHealthChecks();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -44,5 +45,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapHealthChecks("/health-check");
 
 app.Run();
