@@ -1,6 +1,7 @@
 ﻿using TransactionsLog.DataLayer.Abstractions;
 using TransactionsLog.DataLayer.Abstractions.Repositories;
 using TransactionsLog.Models.Entities;
+using TransactionsLog.Models.Enums;
 using TransactionsLog.Services.TransactionParser;
 using TransactionsLog.Services.TransactionParser.DTOs;
 using TransactionsLog.Services.TransactionsLogger;
@@ -89,14 +90,14 @@ namespace TransactionsLog.Services.TransactionsUploader
             foreach (var parsingResult in parsingResultWithTransactionType)
             {
                 var transaction = new Transaction
-                {
-                    AbsoluteValue = parsingResult.parsingResult.Transaction.AbsoluteValue,
+                {                    
                     Card = parsingResult.parsingResult.Transaction.Card,
                     Cpf = parsingResult.parsingResult.Transaction.Cpf,
                     StoreName = parsingResult.parsingResult.Transaction.StoreName,
                     StoreOwnerName = parsingResult.parsingResult.Transaction.StoreOwnerName,
                     TransactionType = parsingResult.transactionType,
-                    Timestamp = parsingResult.parsingResult.Transaction.Timestamp
+                    Timestamp = parsingResult.parsingResult.Transaction.Timestamp,
+                    Value = parsingResult.transactionType.TransactionFlow.Signal() * parsingResult.parsingResult.Transaction.AbsoluteValue
                 };
 
                 await _transactionRepository.Insert(transaction);

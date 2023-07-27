@@ -11,13 +11,11 @@ namespace TransactionsLog.Models.Entities
     {
         public int Id { get; set; }
         public DateTime Timestamp { get; set; }
-        public decimal AbsoluteValue { get; set; }
+        public decimal Value { get; set; }
         public string Cpf { get; set; } = string.Empty;
         public string Card { get; set; } = string.Empty;
         public string StoreOwnerName { get; set; } = string.Empty;
         public string StoreName { get; set; } = string.Empty;
         public TransactionType TransactionType { get; set; }
-
-        public decimal Value => TransactionType.TransactionFlow.Signal() * AbsoluteValue;
     }
 }

@@ -116,8 +116,8 @@ namespace TransactionsLog.Services.Tests
             (TransactionRawDTO?, string) parseResult = (transactionRawDto, string.Empty);
             var transactionTypes = new[]
             {
-                Mock.Of<TransactionType>(tt => tt.Id == 1),
-                Mock.Of<TransactionType>(tt => tt.Id == 2)
+                Mock.Of<TransactionType>(tt => tt.Id == 1 && tt.TransactionFlow == Models.Enums.TransactionFlow.Inbound),
+                Mock.Of<TransactionType>(tt => tt.Id == 2 && tt.TransactionFlow == Models.Enums.TransactionFlow.Inbound)
             };
             var inputStream = new MemoryStream(Encoding.UTF8.GetBytes(record));
 
@@ -127,7 +127,7 @@ namespace TransactionsLog.Services.Tests
             var loggingResult = await _transactionLogger.FromFile(inputStream);
 
             Func<Transaction, bool> matchesTestTransaction = transaction =>
-                transaction.AbsoluteValue == transactionRawDto.AbsoluteValue &&
+                transaction.Value == transactionRawDto.AbsoluteValue &&
                 transaction.Card == transactionRawDto.Card &&
                 transaction.Cpf == transactionRawDto.Cpf &&
                 transaction.StoreName == transactionRawDto.StoreName &&
@@ -137,6 +137,38 @@ namespace TransactionsLog.Services.Tests
 
             loggingResult.Success.Should().BeTrue();
             _transactionRepositoryMock.Verify(tr => tr.Insert(It.Is<Transaction>(t => matchesTestTransaction(t))), Times.Once());
+            _unitOfWorkMock.Verify(tr => tr.Commit(), Times.Once());
+        }
+
+        [Fact]
+
+        public async Task ShoudlWriteTransactionWithNegativeValueIfTransationTypeIsOutbound()
+        {
+            var record = "askjoaskosajas";
+            var transactionRawDto = new TransactionRawDTO
+            {
+                TransactionTypeId = 1,
+                AbsoluteValue = 10,
+                Card = "kjasokas",
+                Cpf = "1111111",
+                StoreName = "koasksa",
+                StoreOwnerName = "jsiajsai",
+                Timestamp = DateTime.Now
+            };
+            (TransactionRawDTO?, string) parseResult = (transactionRawDto, string.Empty);
+            var transactionTypes = new[]
+            {
+                Mock.Of<TransactionType>(tt => tt.Id == 1 && tt.TransactionFlow == Models.Enums.TransactionFlow.Outbound)
+            };
+            var inputStream = new MemoryStream(Encoding.UTF8.GetBytes(record));
+
+            _transactionParserMock.Setup(tp => tp.ParseRecord(record)).Returns(parseResult);
+            _transactionTypeRepositoryMock.Setup(ttr => ttr.GetAll()).ReturnsAsync(transactionTypes);
+
+            var loggingResult = await _transactionLogger.FromFile(inputStream);
+
+            loggingResult.Success.Should().BeTrue();
+            _transactionRepositoryMock.Verify(tr => tr.Insert(It.Is<Transaction>(t => t.Value == transactionRawDto.AbsoluteValue * -1)), Times.Once());
             _unitOfWorkMock.Verify(tr => tr.Commit(), Times.Once());
         }
 
