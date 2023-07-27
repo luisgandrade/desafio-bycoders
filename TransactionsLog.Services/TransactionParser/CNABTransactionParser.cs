@@ -51,7 +51,7 @@ namespace TransactionsLog.Services.TransactionParser
             {
                 TransactionTypeId = transactionTypeId,
                 AbsoluteValue = absoluteValue / 100,
-                Timestamp = new DateTime(date.Year, date.Month, date.Day, time.Hour, time.Minute, time.Second, DateTimeKind.Local),
+                Timestamp = new DateTime(date.Year, date.Month, date.Day, time.Hour, time.Minute, time.Second, DateTimeKind.Utc),
                 Cpf = cpf,
                 Card = card,
                 StoreOwnerName = storeOwnerName,

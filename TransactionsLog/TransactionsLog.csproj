@@ -17,11 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\TransactionsLog.DataLayer.EF\TransactionsLog.DataLayer.EF.csproj" />
+    <ProjectReference Include="..\TransactionsLog.Services\TransactionsLog.Services.csproj" />
   </ItemGroup>
 
 </Project>
