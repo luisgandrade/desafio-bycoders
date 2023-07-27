@@ -13,7 +13,7 @@ namespace TransactionsLog.Services.Tests
     public class DefaultTransactionsLoggerTests
     {
 
-        private readonly Mock<IBaseRepository<Transaction>> _transactionRepositoryMock;
+        private readonly Mock<ITransactionRepository> _transactionRepositoryMock;
         private readonly Mock<IBaseRepository<TransactionType>> _transactionTypeRepositoryMock;
         private readonly Mock<ITransactionParser> _transactionParserMock;
         private readonly Mock<IUnitOfWork> _unitOfWorkMock;
@@ -58,8 +58,17 @@ namespace TransactionsLog.Services.Tests
         {
             var firstRecord = "askjoaskosajas";
             var secondRecord = "sdajiaisjiasojsa";
+            var transactionRawDto = new TransactionRawDTO(
+                transactionTypeId: 1,
+                absoluteValue: 10,
+                card: "kjasokas",
+                cpf: "1111111",
+                storeName: "koasksa",
+                storeOwnerName: "jsiajsai",
+                timestamp: DateTime.Now
+            );
             (TransactionRawDTO?, string) firstRecordParseResult = (null, "errroror");
-            (TransactionRawDTO?, string) secondRecordParseResult = (new TransactionRawDTO { }, string.Empty);
+            (TransactionRawDTO?, string) secondRecordParseResult = (transactionRawDto, string.Empty);
             var inputStream = new MemoryStream(Encoding.UTF8.GetBytes($"{firstRecord}\n{secondRecord}"));
 
             _transactionParserMock.Setup(tp => tp.ParseRecord(firstRecord)).Returns(firstRecordParseResult);
@@ -79,7 +88,16 @@ namespace TransactionsLog.Services.Tests
         public async Task ShoudlFailIfTheTransactionTypeOfSomeRecordIsUnknown()
         {
             var record = "askjoaskosajas";
-            (TransactionRawDTO?, string) parseResult = (new TransactionRawDTO { TransactionTypeId = 3 }, string.Empty);
+            var transactionRawDto = new TransactionRawDTO(
+                transactionTypeId: 3,
+                absoluteValue: 10,
+                card: "kjasokas",
+                cpf: "1111111",
+                storeName: "koasksa",
+                storeOwnerName: "jsiajsai",
+                timestamp: DateTime.Now
+            );
+            (TransactionRawDTO?, string) parseResult = (transactionRawDto, string.Empty);
             var transactionTypes = new[]
             {
                 Mock.Of<TransactionType>(tt => tt.Id == 1),
@@ -103,16 +121,15 @@ namespace TransactionsLog.Services.Tests
         public async Task ShoudlWriteTransactionToRepositoryIfItIsEverythingOk()
         {
             var record = "askjoaskosajas";
-            var transactionRawDto = new TransactionRawDTO
-            {
-                TransactionTypeId = 1,
-                AbsoluteValue = 10,
-                Card = "kjasokas",
-                Cpf = "1111111",
-                StoreName = "koasksa",
-                StoreOwnerName = "jsiajsai",
-                Timestamp = DateTime.Now
-            };
+            var transactionRawDto = new TransactionRawDTO(            
+                transactionTypeId: 1,
+                absoluteValue: 10,
+                card: "kjasokas",
+                cpf: "1111111",
+                storeName: "koasksa",
+                storeOwnerName: "jsiajsai",
+                timestamp: DateTime.Now
+            );
             (TransactionRawDTO?, string) parseResult = (transactionRawDto, string.Empty);
             var transactionTypes = new[]
             {
@@ -145,16 +162,15 @@ namespace TransactionsLog.Services.Tests
         public async Task ShoudlWriteTransactionWithNegativeValueIfTransationTypeIsOutbound()
         {
             var record = "askjoaskosajas";
-            var transactionRawDto = new TransactionRawDTO
-            {
-                TransactionTypeId = 1,
-                AbsoluteValue = 10,
-                Card = "kjasokas",
-                Cpf = "1111111",
-                StoreName = "koasksa",
-                StoreOwnerName = "jsiajsai",
-                Timestamp = DateTime.Now
-            };
+            var transactionRawDto = new TransactionRawDTO(
+                transactionTypeId: 1,
+                absoluteValue: 10,
+                card: "kjasokas",
+                cpf: "1111111",
+                storeName: "koasksa",
+                storeOwnerName: "jsiajsai",
+                timestamp: DateTime.Now
+            );
             (TransactionRawDTO?, string) parseResult = (transactionRawDto, string.Empty);
             var transactionTypes = new[]
             {

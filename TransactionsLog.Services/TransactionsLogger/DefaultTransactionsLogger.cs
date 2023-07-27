@@ -18,12 +18,12 @@ namespace TransactionsLog.Services.TransactionsUploader
             public string? ErrorMessage { get; set; }
         }
 
-        private readonly IBaseRepository<Transaction> _transactionRepository;
+        private readonly ITransactionRepository _transactionRepository;
         private readonly IBaseRepository<TransactionType> _transactionTypeRepository;
         private readonly ITransactionParser _transactionParser;
         private readonly IUnitOfWork _unitOfWork;
 
-        public DefaultTransactionsLogger(IBaseRepository<Transaction> transactionRepository, 
+        public DefaultTransactionsLogger(ITransactionRepository transactionRepository, 
             IBaseRepository<TransactionType> transactionTypeRepository, 
             ITransactionParser transactionParser, 
             IUnitOfWork unitOfWork)

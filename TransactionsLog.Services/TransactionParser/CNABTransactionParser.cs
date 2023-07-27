@@ -47,16 +47,14 @@ namespace TransactionsLog.Services.TransactionParser
             if (errors.Any())
                 return (null, string.Join("; ", errors));
 
-            var transactionDto = new TransactionRawDTO
-            {
-                TransactionTypeId = transactionTypeId,
-                AbsoluteValue = absoluteValue / 100,
-                Timestamp = new DateTime(date.Year, date.Month, date.Day, time.Hour, time.Minute, time.Second, DateTimeKind.Utc),
-                Cpf = cpf,
-                Card = card,
-                StoreOwnerName = storeOwnerName,
-                StoreName = storeName
-            };
+            var transactionDto = new TransactionRawDTO(
+                transactionTypeId: transactionTypeId,
+                absoluteValue: absoluteValue / 100,
+                timestamp: new DateTime(date.Year, date.Month, date.Day, time.Hour, time.Minute, time.Second, DateTimeKind.Utc),
+                cpf: cpf,
+                card: card,
+                storeName: storeName,
+                storeOwnerName: storeOwnerName);
 
             return (transactionDto, string.Empty);
         }

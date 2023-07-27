@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TransactionsLog.Services.TransactionsLogger;
+using TransactionsLog.Services.TransactionsReportGenerator;
 
 namespace TransactionsLog.Controllers
 {
@@ -10,10 +11,12 @@ namespace TransactionsLog.Controllers
     {
 
         private readonly ITransactionsLogger _transactionsLogger;
+        private readonly ITransactionsReportGenerator _transactionsReportGenerator;
 
-        public TransactionsController(ITransactionsLogger transactionsLogger)
+        public TransactionsController(ITransactionsLogger transactionsLogger, ITransactionsReportGenerator transactionsReportGenerator)
         {
             _transactionsLogger = transactionsLogger;
+            _transactionsReportGenerator = transactionsReportGenerator;
         }
 
         [HttpPost("upload")]
@@ -26,6 +29,12 @@ namespace TransactionsLog.Controllers
             if (!loggingResult.Success)
                 return BadRequest(loggingResult.ErrorMessages);
             return NoContent();
+        }
+
+        [HttpGet("report")]
+        public async Task<IActionResult> GenerateReport()
+        {
+            return Ok(await _transactionsReportGenerator.Generate());
         }
     }
 }

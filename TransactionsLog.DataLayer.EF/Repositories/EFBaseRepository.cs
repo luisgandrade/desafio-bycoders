@@ -11,7 +11,7 @@ namespace TransactionsLog.DataLayer.EF.Repositories
     public class EFBaseRepository<TEntity> : IBaseRepository<TEntity>
         where TEntity : class
     {
-        private readonly TransactionsLogContext _context;
+        protected readonly TransactionsLogContext _context;
 
         public EFBaseRepository(TransactionsLogContext context)
         {

@@ -6,6 +6,7 @@ using TransactionsLog.DataLayer.EF.Repositories;
 using TransactionsLog.Models.Entities;
 using TransactionsLog.Services.TransactionParser;
 using TransactionsLog.Services.TransactionsLogger;
+using TransactionsLog.Services.TransactionsReportGenerator;
 using TransactionsLog.Services.TransactionsUploader;
 using TransactionsLog.StartupExtensions;
 
@@ -19,7 +20,8 @@ builder.Services.AddDbContext<TransactionsLogContext>(options => options.UseNpgs
 
 builder.Services.AddScoped<ITransactionsLogger, DefaultTransactionsLogger>();
 builder.Services.AddScoped<ITransactionParser, CNABTransactionParser>();
-builder.Services.AddScoped<IBaseRepository<Transaction>, EFBaseRepository<Transaction>>();
+builder.Services.AddScoped<ITransactionsReportGenerator, DefaultTransactionReportGenerator>();
+builder.Services.AddScoped<ITransactionRepository, EFTransactionRepository>();
 builder.Services.AddScoped<IBaseRepository<TransactionType>, EFBaseRepository<TransactionType>>();
 builder.Services.AddScoped<IUnitOfWork, EFUnitOfWork>();
 
@@ -31,12 +33,9 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.BootstrapDb();
 

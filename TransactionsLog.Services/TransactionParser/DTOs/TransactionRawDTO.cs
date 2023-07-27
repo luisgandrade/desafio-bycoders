@@ -16,5 +16,16 @@ namespace TransactionsLog.Services.TransactionParser.DTOs
         public string Card { get; set; }
         public string StoreOwnerName { get; set; }
         public string StoreName { get; set; }
+
+        public TransactionRawDTO(int transactionTypeId, DateTime timestamp, decimal absoluteValue, string cpf, string card, string storeOwnerName, string storeName)
+        {
+            TransactionTypeId = transactionTypeId;
+            Timestamp = timestamp;
+            AbsoluteValue = absoluteValue;
+            Cpf = cpf;
+            Card = card;
+            StoreOwnerName = storeOwnerName;
+            StoreName = storeName;
+        }
     }
 }
