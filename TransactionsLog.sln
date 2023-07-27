@@ -13,7 +13,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TransactionsLog.DataLayer.E
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TransactionsLog.Services", "TransactionsLog.Services\TransactionsLog.Services.csproj", "{BE53D3F6-89C6-4A3C-98B1-C433F239BC3F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TransactionsLog.Services.Tests", "TransactionsLog.Services.Tests\TransactionsLog.Services.Tests.csproj", "{044E225E-8F16-42D5-A674-5A0A0D6CFD0D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TransactionsLog.Services.Tests", "TransactionsLog.Services.Tests\TransactionsLog.Services.Tests.csproj", "{044E225E-8F16-42D5-A674-5A0A0D6CFD0D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Itens de Solução", "Itens de Solução", "{E37338D2-1F56-408A-B208-49479CEC274C}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.yml = docker-compose.yml
+		Dockerfile = Dockerfile
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
